@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+external:
+  api:
+    open-library:
+      base-url: https://openlibrary.org
+      timeout: 5000
