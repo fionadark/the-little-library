@@ -1,8 +1,5 @@
 package thelittlelibrary.dto;
 
-/**
- * Simple DTO for book search results.
- */
 public class BookSearchResponse {
     private String title;
     private String author;

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Simplified service to search books using OpenLibrary API.
+ * Service to search books using OpenLibrary API.
  */
 @Service
 public class ExternalBookSearchService {
