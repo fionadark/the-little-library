@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Simplified REST controller for book search operations.
- * Provides basic search functionality using OpenLibrary API.
+ * REST controller for book search operations.
+ * Provides search functionality using OpenLibrary API.
  */
 @RestController
 @RequestMapping("/search")
@@ -24,7 +24,6 @@ public class BookSearchController {
 
     /**
      * Search for books by query.
-     * 
      * @param query Search query (title, author, or general search)
      * @param limit Maximum number of results (default: 10)
      * @return List of books matching the query
@@ -44,7 +43,6 @@ public class BookSearchController {
 
     /**
      * Search for a book by ISBN.
-     * 
      * @param isbn ISBN to search for
      * @return Book details if found
      */
@@ -65,7 +63,6 @@ public class BookSearchController {
 
     /**
      * Health check endpoint to verify OpenLibrary API is reachable.
-     * 
      * @return Health status information
      */
     @GetMapping("/health")
