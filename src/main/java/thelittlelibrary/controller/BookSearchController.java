@@ -11,10 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * REST controller for book search operations.
- * Provides search functionality using OpenLibrary API.
- */
+
 @RestController
 @RequestMapping("/search")
 public class BookSearchController {
