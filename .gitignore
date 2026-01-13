@@ -24,6 +24,10 @@ bin/
 # Logs
 *.log
 
+# Firebase service account credentials
+firebase-service-account.json
+*-firebase-adminsdk-*.json
+
 # Package files
 *.jar
 *.war
