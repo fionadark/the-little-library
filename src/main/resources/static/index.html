@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Little Library - Authentication Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+            max-width: 450px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .auth-section {
+            display: none;
+        }
+        .auth-section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        .btn-google {
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        .btn-google:hover {
+            background: #f5f5f5;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #f0f2ff;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #999;
+            font-size: 14px;
+        }
+        .link {
+            text-align: center;
+            margin-top: 15px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
+        .user-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .user-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .token-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+            color: #555;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .success {
+            background: #efe;
+            color: #3c3;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .test-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .test-result {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 The Little Library</h1>
+        <p class="subtitle">Firebase Authentication Test</p>
+
+        <div id="message"></div>
+
+        <!-- Login Section -->
+        <div id="login-section" class="auth-section active">
+            <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" onclick="loginWithEmail()">Sign In</button>
+            <div class="divider">OR</div>
+            <button class="btn btn-google" onclick="loginWithGoogle()">🔍 Sign in with Google</button>
+            <div class="link" onclick="showSignup()">Don't have an account? Sign up</div>
+        </div>
+
+        <!-- Signup Section -->
+        <div id="signup-section" class="auth-section">
+            <div class="form-group">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label for="signup-password">Password</label>
+                <input type="password" id="signup-password" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" onclick="signupWithEmail()">Create Account</button>
+            <div class="divider">OR</div>
+            <button class="btn btn-google" onclick="loginWithGoogle()">🔍 Sign up with Google</button>
+            <div class="link" onclick="showLogin()">Already have an account? Sign in</div>
+        </div>
+
+        <!-- Authenticated Section -->
+        <div id="authenticated-section" class="auth-section">
+            <div class="user-info">
+                <p><strong>Email:</strong> <span id="user-email"></span></p>
+                <p><strong>UID:</strong> <span id="user-uid"></span></p>
+            </div>
+            
+            <div class="test-section">
+                <h3 style="margin-bottom: 15px; color: #333; font-size: 16px;">Test Backend Authentication</h3>
+                <button class="btn btn-primary" onclick="testBackendAuth()">Test Protected Endpoint</button>
+                <div id="test-result"></div>
+            </div>
+
+            <button class="btn btn-secondary" onclick="showToken()">Show Auth Token</button>
+            <div id="token-display"></div>
+            <button class="btn btn-danger" onclick="logout()">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxonhWR4zQIgnO8pwiIIbR7c23tkL8I9g",
+            authDomain: "the-little-library-2316c.firebaseapp.com",
+            projectId: "the-little-library-2316c",
+            storageBucket: "the-little-library-2316c.firebasestorage.app",
+            messagingSenderId: "791826972952",
+            appId: "1:791826972952:web:564e2787ff0b20e9fe5e6d",
+            measurementId: "G-ZSLXEWRZM0"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Make auth available globally
+        window.auth = auth;
+        window.googleProvider = googleProvider;
+
+        // Auth state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                showAuthenticatedSection(user);
+            } else {
+                showLoginSection();
+            }
+        });
+
+        function showAuthenticatedSection(user) {
+            document.getElementById('login-section').classList.remove('active');
+            document.getElementById('signup-section').classList.remove('active');
+            document.getElementById('authenticated-section').classList.add('active');
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-uid').textContent = user.uid;
+        }
+
+        function showLoginSection() {
+            document.getElementById('login-section').classList.add('active');
+            document.getElementById('signup-section').classList.remove('active');
+            document.getElementById('authenticated-section').classList.remove('active');
+        }
+
+        // Export functions to global scope
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithPopup = signInWithPopup;
+        window.signOut = signOut;
+    </script>
+
+    <script>
+        function showMessage(message, type = 'error') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            setTimeout(() => {
+                messageDiv.textContent = '';
+                messageDiv.className = '';
+            }, 5000);
+        }
+
+        function showLogin() {
+            document.getElementById('signup-section').classList.remove('active');
+            document.getElementById('login-section').classList.add('active');
+        }
+
+        function showSignup() {
+            document.getElementById('login-section').classList.remove('active');
+            document.getElementById('signup-section').classList.add('active');
+        }
+
+        async function loginWithEmail() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                showMessage('Please fill in all fields');
+                return;
+            }
+
+            try {
+                await window.signInWithEmailAndPassword(window.auth, email, password);
+                showMessage('Successfully signed in!', 'success');
+            } catch (error) {
+                showMessage('Login failed: ' + error.message);
+            }
+        }
+
+        async function signupWithEmail() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            if (!email || !password) {
+                showMessage('Please fill in all fields');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters');
+                return;
+            }
+
+            try {
+                await window.createUserWithEmailAndPassword(window.auth, email, password);
+                showMessage('Account created successfully!', 'success');
+            } catch (error) {
+                showMessage('Signup failed: ' + error.message);
+            }
+        }
+
+        async function loginWithGoogle() {
+            try {
+                await window.signInWithPopup(window.auth, window.googleProvider);
+                showMessage('Successfully signed in with Google!', 'success');
+            } catch (error) {
+                showMessage('Google sign-in failed: ' + error.message);
+            }
+        }
+
+        async function logout() {
+            try {
+                await window.signOut(window.auth);
+                document.getElementById('token-display').innerHTML = '';
+                document.getElementById('test-result').innerHTML = '';
+                showMessage('Successfully signed out', 'success');
+            } catch (error) {
+                showMessage('Sign out failed: ' + error.message);
+            }
+        }
+
+        async function showToken() {
+            try {
+                const user = window.auth.currentUser;
+                if (user) {
+                    const token = await user.getIdToken();
+                    document.getElementById('token-display').innerHTML = 
+                        '<div class="token-display"><strong>ID Token (for Authorization header):</strong><br>' + token + '</div>';
+                }
+            } catch (error) {
+                showMessage('Failed to get token: ' + error.message);
+            }
+        }
+
+        async function testBackendAuth() {
+            try {
+                const user = window.auth.currentUser;
+                if (!user) {
+                    showMessage('Please sign in first');
+                    return;
+                }
+
+                const token = await user.getIdToken();
+                
+                const response = await fetch('/api/auth/verify', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('test-result').innerHTML = 
+                        '<div class="test-result" style="background: #efe; color: #3c3;"><strong>✓ Backend Verification Success!</strong><br>' + 
+                        JSON.stringify(data, null, 2) + '</div>';
+                } else {
+                    document.getElementById('test-result').innerHTML = 
+                        '<div class="test-result" style="background: #fee; color: #c33;"><strong>✗ Backend Verification Failed</strong><br>' + 
+                        JSON.stringify(data, null, 2) + '</div>';
+                }
+            } catch (error) {
+                document.getElementById('test-result').innerHTML = 
+                    '<div class="test-result" style="background: #fee; color: #c33;"><strong>✗ Error</strong><br>' + 
+                    error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>
