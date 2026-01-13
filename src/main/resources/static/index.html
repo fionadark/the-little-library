@@ -222,8 +222,10 @@
             </div>
             
             <div class="test-section">
-                <h3 style="margin-bottom: 15px; color: #333; font-size: 16px;">Test Backend Authentication</h3>
-                <button class="btn btn-primary" onclick="testBackendAuth()">Test Protected Endpoint</button>
+                <h3 style="margin-bottom: 15px; color: #333; font-size: 16px;">Authentication Successful!</h3>
+                <button class="btn btn-primary" onclick="goToLibrary()">Go to My Library</button>
+                <div style="margin: 15px 0; text-align: center; color: #666; font-size: 14px;">OR</div>
+                <button class="btn btn-secondary" onclick="testBackendAuth()">Test Protected Endpoint</button>
                 <div id="test-result"></div>
             </div>
 
@@ -366,6 +368,10 @@
             } catch (error) {
                 showMessage('Sign out failed: ' + error.message);
             }
+        }
+
+        function goToLibrary() {
+            window.location.href = '/library.html';
         }
 
         async function showToken() {
