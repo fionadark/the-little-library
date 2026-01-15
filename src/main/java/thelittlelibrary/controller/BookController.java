@@ -85,16 +85,22 @@ public class BookController {
     }
 
     /**
-     * Get all books for the authenticated user with optional search.
+     * Get all books for the authenticated user with optional search and filters.
      * 
      * @param authHeader Authorization header with Firebase token
      * @param searchQuery Optional search query to filter by title, author, or ISBN
-     * @return List of user's books (filtered if search query provided)
+     * @param status Optional filter by reading status
+     * @param author Optional filter by author
+     * @param location Optional filter by location
+     * @return List of user's books (filtered if parameters provided)
      */
     @GetMapping
     public ResponseEntity<Map<String, Object>> getMyBooks(
             @RequestHeader(value = "Authorization") String authHeader,
-            @RequestParam(value = "search", required = false) String searchQuery) {
+            @RequestParam(value = "search", required = false) String searchQuery,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "author", required = false) String author,
+            @RequestParam(value = "location", required = false) String location) {
         
         Map<String, Object> response = new HashMap<>();
         
@@ -121,6 +127,21 @@ public class BookController {
             // Apply search filter if provided
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
                 books = filterBooksBySearch(books, searchQuery.trim());
+            }
+            
+            // Apply status filter if provided
+            if (status != null && !status.trim().isEmpty()) {
+                books = filterBooksByStatus(books, status.trim());
+            }
+            
+            // Apply author filter if provided
+            if (author != null && !author.trim().isEmpty()) {
+                books = filterBooksByAuthor(books, author.trim());
+            }
+            
+            // Apply location filter if provided
+            if (location != null && !location.trim().isEmpty()) {
+                books = filterBooksByLocation(books, location.trim());
             }
             
             response.put("success", true);
@@ -182,6 +203,52 @@ public class BookController {
                 
                 return false;
             })
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Filters books by reading status.
+     * 
+     * @param books List of books to filter
+     * @param status Reading status to filter by
+     * @return Filtered list of books
+     */
+    private List<Book> filterBooksByStatus(List<Book> books, String status) {
+        return books.stream()
+            .filter(book -> book.getReadingStatus() != null && 
+                           book.getReadingStatus().equalsIgnoreCase(status))
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Filters books by author.
+     * Case-insensitive partial match.
+     * 
+     * @param books List of books to filter
+     * @param author Author name to filter by
+     * @return Filtered list of books
+     */
+    private List<Book> filterBooksByAuthor(List<Book> books, String author) {
+        String lowerAuthor = author.toLowerCase();
+        return books.stream()
+            .filter(book -> book.getAuthor() != null && 
+                           book.getAuthor().toLowerCase().contains(lowerAuthor))
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Filters books by location.
+     * Case-insensitive partial match.
+     * 
+     * @param books List of books to filter
+     * @param location Location to filter by
+     * @return Filtered list of books
+     */
+    private List<Book> filterBooksByLocation(List<Book> books, String location) {
+        String lowerLocation = location.toLowerCase();
+        return books.stream()
+            .filter(book -> book.getLocation() != null && 
+                           book.getLocation().toLowerCase().contains(lowerLocation))
             .collect(java.util.stream.Collectors.toList());
     }
 
