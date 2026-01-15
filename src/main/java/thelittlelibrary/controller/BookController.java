@@ -85,14 +85,16 @@ public class BookController {
     }
 
     /**
-     * Get all books for the authenticated user.
+     * Get all books for the authenticated user with optional search.
      * 
      * @param authHeader Authorization header with Firebase token
-     * @return List of user's books
+     * @param searchQuery Optional search query to filter by title, author, or ISBN
+     * @return List of user's books (filtered if search query provided)
      */
     @GetMapping
     public ResponseEntity<Map<String, Object>> getMyBooks(
-            @RequestHeader(value = "Authorization") String authHeader) {
+            @RequestHeader(value = "Authorization") String authHeader,
+            @RequestParam(value = "search", required = false) String searchQuery) {
         
         Map<String, Object> response = new HashMap<>();
         
@@ -116,9 +118,17 @@ public class BookController {
                 books.add(Book.fromFirestoreMap(docId, bookMap));
             }
             
+            // Apply search filter if provided
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                books = filterBooksBySearch(books, searchQuery.trim());
+            }
+            
             response.put("success", true);
             response.put("count", books.size());
             response.put("books", books);
+            if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+                response.put("searchQuery", searchQuery.trim());
+            }
             
             return ResponseEntity.ok(response);
             
@@ -131,6 +141,48 @@ public class BookController {
             response.put("message", "Failed to retrieve books: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+    
+    /**
+     * Filters books by search query. Searches across title, author, ISBN, and publisher.
+     * Case-insensitive search.
+     * 
+     * @param books List of books to filter
+     * @param query Search query string
+     * @return Filtered list of books matching the search query
+     */
+    private List<Book> filterBooksBySearch(List<Book> books, String query) {
+        String lowerQuery = query.toLowerCase();
+        
+        return books.stream()
+            .filter(book -> {
+                // Search in title
+                if (book.getTitle() != null && 
+                    book.getTitle().toLowerCase().contains(lowerQuery)) {
+                    return true;
+                }
+                
+                // Search in author
+                if (book.getAuthor() != null && 
+                    book.getAuthor().toLowerCase().contains(lowerQuery)) {
+                    return true;
+                }
+                
+                // Search in ISBN (exact or partial match)
+                if (book.getIsbn() != null && 
+                    book.getIsbn().toLowerCase().contains(lowerQuery)) {
+                    return true;
+                }
+                
+                // Search in publisher
+                if (book.getPublisher() != null && 
+                    book.getPublisher().toLowerCase().contains(lowerQuery)) {
+                    return true;
+                }
+                
+                return false;
+            })
+            .collect(java.util.stream.Collectors.toList());
     }
 
     /**

@@ -265,6 +265,22 @@
         <!-- Books List Section -->
         <div class="section">
             <h2>My Books (<span id="book-count">0</span>)</h2>
+            
+            <!-- Search Bar -->
+            <div style="margin-bottom: 20px;">
+                <form onsubmit="searchMyLibrary(event)" style="display: flex; gap: 10px;">
+                    <input 
+                        type="text" 
+                        id="library-search" 
+                        placeholder="Search your library by title, author, ISBN..."
+                        style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;"
+                    >
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearSearch()">Clear</button>
+                </form>
+                <div id="search-info" style="margin-top: 8px; font-size: 13px; color: #666;"></div>
+            </div>
+            
             <div id="books-container">
                 <div class="loading">Loading your library...</div>
             </div>
@@ -377,7 +393,17 @@
 
                 const token = await user.getIdToken();
                 
-                const response = await fetch('/api/books', {
+                // Get search query if it exists
+                const searchInput = document.getElementById('library-search');
+                const searchQuery = searchInput ? searchInput.value.trim() : '';
+                
+                // Build URL with optional search parameter
+                let url = '/api/books';
+                if (searchQuery) {
+                    url += `?search=${encodeURIComponent(searchQuery)}`;
+                }
+                
+                const response = await fetch(url, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
@@ -388,12 +414,32 @@
                 if (response.ok) {
                     displayBooks(result.books || []);
                     document.getElementById('book-count').textContent = result.count || 0;
+                    
+                    // Update search info
+                    const searchInfo = document.getElementById('search-info');
+                    if (result.searchQuery) {
+                        searchInfo.textContent = `Showing results for: "${result.searchQuery}"`;
+                        searchInfo.style.color = '#667eea';
+                        searchInfo.style.fontWeight = '500';
+                    } else {
+                        searchInfo.textContent = '';
+                    }
                 } else {
                     showMessage('Failed to load books: ' + result.message);
                 }
             } catch (error) {
                 showMessage('Error loading books: ' + error.message);
             }
+        }
+
+        function searchMyLibrary(event) {
+            event.preventDefault();
+            loadBooks();
+        }
+
+        function clearSearch() {
+            document.getElementById('library-search').value = '';
+            loadBooks();
         }
 
         function displayBooks(books) {
