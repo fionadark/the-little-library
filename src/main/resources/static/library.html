@@ -12,42 +12,97 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
-            padding: 20px;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            padding: 30px;
+            margin: 0;
+            padding: 0;
         }
         .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
         }
         h1 {
-            color: #333;
-            font-size: 24px;
+            margin: 0;
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
         }
-        .user-info {
-            font-size: 14px;
-            color: #666;
+        .blurb {
+            font-size: 16px;
+            opacity: 0.95;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .add-books-section {
+            text-align: center;
+        }
+        .controls-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .books-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 25px;
+        }
+        .books-scroll-container {
+            max-height: 600px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding-right: 10px;
+        }
+        .books-scroll-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .books-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .books-scroll-container::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+        .books-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
         }
         .btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
         .btn-primary {
             background: #667eea;
@@ -55,33 +110,140 @@
         }
         .btn-primary:hover {
             background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
         }
-        .btn-danger {
-            background: #e74c3c;
+        .btn-large {
+            padding: 16px 40px;
+            font-size: 18px;
+        }
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #f0f2ff;
+        }
+        .btn-white {
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 5px 10px;
-            font-size: 12px;
+            border: 2px solid white;
+            backdrop-filter: blur(10px);
         }
-        .btn-danger:hover {
-            background: #c0392b;
+        .btn-white:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
         .btn-small {
             padding: 8px 16px;
             font-size: 13px;
         }
-        .section {
-            margin-bottom: 30px;
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
         }
         .section h2 {
             color: #333;
-            font-size: 18px;
+            font-size: 20px;
+            margin: 0 0 15px 0;
+            font-weight: 600;
+        }
+        .search-bar-container {
+            margin-bottom: 20px;
+        }
+        .search-form {
+            display: flex;
+            gap: 12px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .controls-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .control-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .control-group label {
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+            margin: 0;
+        }
+        .control-group select {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+        .filter-panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 0;
+            margin-top: 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .filter-panel.active {
+            max-height: 300px;
+            padding: 20px;
             margin-bottom: 15px;
         }
-        .form-grid {
+        .filter-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 15px;
+        }
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .filter-tag {
+            background: #667eea;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-tag button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 0;
         }
         .form-group {
             margin-bottom: 15px;
@@ -187,148 +349,130 @@
         }
         .empty-state {
             text-align: center;
-            padding: 40px;
+            padding: 60px 20px;
             color: #999;
+        }
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .empty-state p {
+            font-size: 16px;
+            line-height: 1.6;
         }
         .loading {
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
             color: #666;
+            font-size: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div>
-                <h1>📚 My Library</h1>
-                <div class="user-info" id="user-email"></div>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <h1>📚 My Library</h1>
+                </div>
+                <button class="btn btn-white btn-small" onclick="logout()">Sign Out</button>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <a href="/search.html" class="btn btn-secondary btn-small" style="text-decoration: none;">🔍 Search Books</a>
-                <button class="btn btn-danger btn-small" onclick="logout()">Sign Out</button>
-            </div>
+            <p class="blurb">
+                Welcome to your personal library! Organize and track all your books in one place. 
+                Search, filter, and sort your collection, or discover new books to add from OpenLibrary.
+            </p>
         </div>
+    </div>
 
+    <div class="container">
         <div id="message"></div>
 
-        <!-- Add Book Section -->
-        <div class="section">
-            <h2>Add a Book</h2>
-            <form id="add-book-form" onsubmit="addBook(event)">
-                <div class="form-grid">
+        <!-- 1. Add Books Section -->
+        <div class="section add-books-section">
+            <h2>Discover New Books</h2>
+            <p style="color: #666; margin-bottom: 20px;">Search OpenLibrary and add books to your collection</p>
+            <a href="/search.html" class="btn btn-primary btn-large">
+                🔍 Add Books from OpenLibrary
+            </a>
+        </div>
+
+        <!-- 2. Search Library Section -->
+        <div class="controls-section">
+            <h2>Search Your Library</h2>
+            <div class="search-bar-container">
+                <form class="search-form" onsubmit="searchMyLibrary(event)">
+                    <input 
+                        type="text" 
+                        id="library-search" 
+                        class="search-input"
+                        placeholder="Search by title, author, ISBN, or publisher..."
+                    >
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="button" class="btn btn-secondary" onclick="clearAll()">Clear All</button>
+                </form>
+                <div id="search-info" style="margin-top: 10px; font-size: 14px; color: #667eea; font-weight: 500;"></div>
+            </div>
+
+            <!-- 3. Filter and Sort Controls -->
+            <div class="controls-row">
+                <button class="btn btn-secondary" onclick="toggleFilters()">
+                    <span id="filter-toggle-icon">▼</span> Filters
+                </button>
+                
+                <div class="control-group">
+                    <label for="sort-by">Sort:</label>
+                    <select id="sort-by" onchange="loadBooks()">
+                        <option value="">Default Order</option>
+                        <option value="title">Title (A-Z)</option>
+                        <option value="author">Author (Last Name)</option>
+                        <option value="dateAdded">Date Added</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="sort-order">Order:</label>
+                    <select id="sort-order" onchange="loadBooks()">
+                        <option value="asc">Ascending ↑</option>
+                        <option value="desc">Descending ↓</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Filter Panel -->
+            <div id="filter-panel" class="filter-panel">
+                <div class="filter-grid">
                     <div class="form-group">
-                        <label for="title">Title *</label>
-                        <input type="text" id="title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="author">Author</label>
-                        <input type="text" id="author">
-                    </div>
-                    <div class="form-group">
-                        <label for="isbn">ISBN</label>
-                        <input type="text" id="isbn">
-                    </div>
-                    <div class="form-group">
-                        <label for="publicationYear">Publication Year</label>
-                        <input type="number" id="publicationYear">
-                    </div>
-                    <div class="form-group">
-                        <label for="publisher">Publisher</label>
-                        <input type="text" id="publisher">
-                    </div>
-                    <div class="form-group">
-                        <label for="readingStatus">Reading Status</label>
-                        <select id="readingStatus">
+                        <label for="filter-status">Reading Status</label>
+                        <select id="filter-status">
+                            <option value="">All Statuses</option>
                             <option value="to-read">To Read</option>
                             <option value="reading">Currently Reading</option>
                             <option value="completed">Completed</option>
                         </select>
                     </div>
-                    <div class="form-group full-width">
-                        <label for="location">Location (where is it physically?)</label>
-                        <input type="text" id="location" placeholder="e.g., Living room shelf">
+                    <div class="form-group">
+                        <label for="filter-author">Author</label>
+                        <input type="text" id="filter-author" placeholder="Filter by author...">
                     </div>
-                    <div class="form-group full-width">
-                        <label for="coverUrl">Cover Image URL (optional)</label>
-                        <input type="url" id="coverUrl" placeholder="https://...">
-                    </div>
-                    <div class="form-group full-width">
-                        <label for="personalNotes">Personal Notes</label>
-                        <textarea id="personalNotes" placeholder="Your thoughts about this book..."></textarea>
+                    <div class="form-group">
+                        <label for="filter-location">Location</label>
+                        <input type="text" id="filter-location" placeholder="Filter by location...">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Add to Library</button>
-            </form>
+                <div class="filter-actions">
+                    <button class="btn btn-secondary btn-small" onclick="clearFilters()">Clear Filters</button>
+                    <button class="btn btn-primary btn-small" onclick="applyFilters()">Apply Filters</button>
+                </div>
+            </div>
+
+            <!-- Active Filters Display -->
+            <div id="active-filters" class="active-filters"></div>
         </div>
 
-        <!-- Books List Section -->
-        <div class="section">
-            <h2>My Books (<span id="book-count">0</span>)</h2>
-            
-            <!-- Search and Filter Bar -->
-            <div style="margin-bottom: 20px;">
-                <form onsubmit="searchMyLibrary(event)" style="display: flex; gap: 10px;">
-                    <input 
-                        type="text" 
-                        id="library-search" 
-                        placeholder="Search your library by title, author, ISBN..."
-                        style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;"
-                    >
-                    <button type="submit" class="btn btn-primary">Search</button>
-                    <button type="button" class="btn btn-secondary" onclick="toggleFilters()">🔽 Filters</button>
-                    <button type="button" class="btn btn-secondary" onclick="clearAll()">Clear All</button>
-                </form>
-                
-                <!-- Sort Controls -->
-                <div class="sort-controls">
-                    <label for="sort-by">Sort by:</label>
-                    <select id="sort-by" onchange="loadBooks()">
-                        <option value="">Default</option>
-                        <option value="title">Title (A-Z)</option>
-                        <option value="author">Author Last Name (A-Z)</option>
-                        <option value="dateAdded">Date Added (Newest)</option>
-                    </select>
-                    <select id="sort-order" onchange="loadBooks()">
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                    </select>
-                </div>
-                
-                <!-- Filter Panel -->
-                <div id="filter-panel" class="filter-panel">
-                    <div class="filter-grid">
-                        <div class="form-group">
-                            <label for="filter-status">Reading Status</label>
-                            <select id="filter-status">
-                                <option value="">All Statuses</option>
-                                <option value="to-read">To Read</option>
-                                <option value="reading">Currently Reading</option>
-                                <option value="completed">Completed</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="filter-author">Author</label>
-                            <input type="text" id="filter-author" placeholder="Filter by author...">
-                        </div>
-                        <div class="form-group">
-                            <label for="filter-location">Location</label>
-                            <input type="text" id="filter-location" placeholder="Filter by location...">
-                        </div>
-                    </div>
-                    <div class="filter-actions">
-                        <button class="btn btn-secondary btn-small" onclick="clearFilters()">Clear Filters</button>
-                        <button class="btn btn-primary btn-small" onclick="applyFilters()">Apply Filters</button>
-                    </div>
-                </div>
-                
-                <!-- Active Filters Display -->
-                <div id="active-filters" class="active-filters"></div>
-                
-                <div id="search-info" style="margin-top: 8px; font-size: 13px; color: #666;"></div>
-            </div>
-            
-            <div id="books-container">
+        <!-- 4. Books List Section -->
+        <div class="books-section">
+            <h2>Your Books (<span id="book-count">0</span>)</h2>
+            <div class="books-scroll-container" id="books-container">
                 <div class="loading">Loading your library...</div>
             </div>
         </div>
@@ -355,13 +499,25 @@
         window.auth = auth;
         window.signOutFirebase = signOut;
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('user-email').textContent = user.email;
-                loadBooks();
-            } else {
-                window.location.href = '/';
-            }
+        // Wait for DOM to be fully loaded before setting up auth listener
+        document.addEventListener('DOMContentLoaded', () => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // Check if loadBooks function is available
+                    if (typeof window.loadBooks === 'function') {
+                        window.loadBooks();
+                    } else {
+                        // If not available yet, wait a bit for scripts to load
+                        setTimeout(() => {
+                            if (typeof window.loadBooks === 'function') {
+                                window.loadBooks();
+                            }
+                        }, 100);
+                    }
+                } else {
+                    window.location.href = '/';
+                }
+            });
         });
     </script>
 
@@ -500,10 +656,14 @@
             }
         }
         
+        // Make loadBooks available globally for Firebase auth callback
+        window.loadBooks = loadBooks;
+        
         function toggleFilters() {
             const panel = document.getElementById('filter-panel');
+            const icon = document.getElementById('filter-toggle-icon');
             panel.classList.toggle('active');
-        }
+            icon.textContent = panel.classList.contains('active') ? '▲' : '▼'
         
         function applyFilters() {
             loadBooks();
@@ -573,7 +733,7 @@
             const container = document.getElementById('books-container');
             
             if (books.length === 0) {
-                container.innerHTML = '<div class="empty-state">No books in your library yet. Add your first book above!</div>';
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📚</div><p>No books in your library yet.<br>Click "Add Books from OpenLibrary" above to get started!</p></div>';
                 return;
             }
 
