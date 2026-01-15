@@ -116,7 +116,9 @@ public class FirestoreService {
             
             List<Map<String, Object>> results = new ArrayList<>();
             for (DocumentSnapshot document : documents) {
-                results.add(document.getData());
+                Map<String, Object> data = new HashMap<>(document.getData());
+                data.put("id", document.getId()); // Include document ID
+                results.add(data);
             }
             
             logger.debug("Retrieved {} documents from {}", results.size(), collection);
@@ -148,7 +150,9 @@ public class FirestoreService {
             List<Map<String, Object>> results = new ArrayList<>();
             
             for (DocumentSnapshot document : documents) {
-                results.add(document.getData());
+                Map<String, Object> data = new HashMap<>(document.getData());
+                data.put("id", document.getId()); // Include document ID
+                results.add(data);
             }
             
             logger.debug("Query found {} documents in {} where {}={}", 
