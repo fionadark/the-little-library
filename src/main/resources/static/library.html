@@ -280,6 +280,21 @@
                     <button type="button" class="btn btn-secondary" onclick="clearAll()">Clear All</button>
                 </form>
                 
+                <!-- Sort Controls -->
+                <div class="sort-controls">
+                    <label for="sort-by">Sort by:</label>
+                    <select id="sort-by" onchange="loadBooks()">
+                        <option value="">Default</option>
+                        <option value="title">Title (A-Z)</option>
+                        <option value="author">Author Last Name (A-Z)</option>
+                        <option value="dateAdded">Date Added (Newest)</option>
+                    </select>
+                    <select id="sort-order" onchange="loadBooks()">
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
+                </div>
+                
                 <!-- Filter Panel -->
                 <div id="filter-panel" class="filter-panel">
                     <div class="filter-grid">
@@ -434,6 +449,10 @@
                 const authorFilter = document.getElementById('filter-author').value.trim();
                 const locationFilter = document.getElementById('filter-location').value.trim();
                 
+                // Get sort values
+                const sortBy = document.getElementById('sort-by').value;
+                const sortOrder = document.getElementById('sort-order').value;
+                
                 // Build URL with optional search and filter parameters
                 let url = '/api/books';
                 const params = new URLSearchParams();
@@ -442,6 +461,8 @@
                 if (statusFilter) params.append('status', statusFilter);
                 if (authorFilter) params.append('author', authorFilter);
                 if (locationFilter) params.append('location', locationFilter);
+                if (sortBy) params.append('sortBy', sortBy);
+                if (sortBy) params.append('order', sortOrder);
                 
                 if (params.toString()) {
                     url += '?' + params.toString();
@@ -497,6 +518,8 @@
         
         function clearAll() {
             document.getElementById('library-search').value = '';
+            document.getElementById('sort-by').value = '';
+            document.getElementById('sort-order').value = 'asc';
             clearFilters();
         }
         
