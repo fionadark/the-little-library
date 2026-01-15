@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Books - The Little Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #f0f2ff;
+        }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        .btn-success:hover {
+            background: #229954;
+        }
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        .search-section {
+            margin-bottom: 30px;
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .message {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .error {
+            background: #fee;
+            color: #c33;
+        }
+        .success {
+            background: #efe;
+            color: #3c3;
+        }
+        .info {
+            background: #e8f4f8;
+            color: #0077b6;
+        }
+        .results-container {
+            display: grid;
+            gap: 20px;
+        }
+        .book-result {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+            display: flex;
+            gap: 20px;
+        }
+        .book-cover {
+            width: 100px;
+            height: 150px;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .book-details {
+            flex: 1;
+        }
+        .book-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .book-author {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .book-meta {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+        .add-form {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            margin-top: 15px;
+        }
+        .add-form-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+        .add-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Search Books</h1>
+            <div class="nav-buttons">
+                <a href="/library.html" class="btn btn-secondary btn-small">My Library</a>
+                <button class="btn btn-primary btn-small" onclick="logout()">Sign Out</button>
+            </div>
+        </div>
+
+        <div id="message"></div>
+
+        <div class="search-section">
+            <form class="search-form" onsubmit="searchBooks(event)">
+                <input 
+                    type="text" 
+                    id="search-query" 
+                    class="search-input" 
+                    placeholder="Search by title, author, or ISBN..."
+                    required
+                >
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <div style="font-size: 13px; color: #666;">
+                Try: "The Hobbit", "Tolkien", or ISBN "9780547928227"
+            </div>
+        </div>
+
+        <div id="results-container">
+            <div class="empty-state">
+                <div class="empty-state-icon">📚</div>
+                <p>Search for books to add to your library</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxonhWR4zQIgnO8pwiIIbR7c23tkL8I9g",
+            authDomain: "the-little-library-2316c.firebaseapp.com",
+            projectId: "the-little-library-2316c",
+            storageBucket: "the-little-library-2316c.firebasestorage.app",
+            messagingSenderId: "791826972952",
+            appId: "1:791826972952:web:564e2787ff0b20e9fe5e6d",
+            measurementId: "G-ZSLXEWRZM0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.auth = auth;
+        window.signOutFirebase = signOut;
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = '/';
+            }
+        });
+    </script>
+
+    <script>
+        let searchResultsData = [];
+
+        function showMessage(message, type = 'error') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = 'message ' + type;
+            messageDiv.textContent = message;
+            setTimeout(() => {
+                messageDiv.textContent = '';
+                messageDiv.className = '';
+            }, 5000);
+        }
+
+        async function logout() {
+            try {
+                await window.signOutFirebase(window.auth);
+                window.location.href = '/';
+            } catch (error) {
+                showMessage('Sign out failed: ' + error.message);
+            }
+        }
+
+        async function searchBooks(event) {
+            event.preventDefault();
+            
+            const query = document.getElementById('search-query').value.trim();
+            if (!query) return;
+
+            const container = document.getElementById('results-container');
+            container.innerHTML = '<div class="loading">Searching OpenLibrary...</div>';
+
+            try {
+                const response = await fetch(`/search/books?q=${encodeURIComponent(query)}&limit=10`);
+                
+                if (!response.ok) {
+                    throw new Error('Search failed');
+                }
+
+                const results = await response.json();
+                searchResultsData = results;
+                displayResults(results);
+
+            } catch (error) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Search failed. Please try again.</p></div>';
+                showMessage('Error searching books: ' + error.message);
+            }
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('results-container');
+            
+            if (results.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">😕</div><p>No books found. Try a different search.</p></div>';
+                return;
+            }
+
+            container.innerHTML = '<div class="results-container">' + results.map((book, index) => `
+                <div class="book-result" id="result-${index}">
+                    <div class="book-cover">
+                        ${book.coverUrl ? 
+                            `<img src="${book.coverUrl}" alt="${book.title}">` : 
+                            '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#ddd;color:#999;font-size:32px;">📖</div>'
+                        }
+                    </div>
+                    <div class="book-details">
+                        <div class="book-title">${book.title || 'Unknown Title'}</div>
+                        <div class="book-author">${book.author || 'Unknown Author'}</div>
+                        <div class="book-meta">
+                            ${book.isbn ? `ISBN: ${book.isbn}` : ''} 
+                            ${book.publicationYear ? ` • ${book.publicationYear}` : ''}
+                            ${book.publisher ? ` • ${book.publisher}` : ''}
+                        </div>
+                        <button class="btn btn-success" onclick="showAddForm(${index})">+ Add to My Library</button>
+                        <div id="add-form-${index}" style="display: none;"></div>
+                    </div>
+                </div>
+            `).join('') + '</div>';
+        }
+
+        function showAddForm(index) {
+            const formContainer = document.getElementById(`add-form-${index}`);
+            const book = searchResultsData[index];
+            
+            formContainer.style.display = 'block';
+            formContainer.innerHTML = `
+                <div class="add-form">
+                    <div class="add-form-title">Add "${book.title}" to your library</div>
+                    <form onsubmit="addToLibrary(event, ${index})">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="status-${index}">Reading Status</label>
+                                <select id="status-${index}">
+                                    <option value="to-read">To Read</option>
+                                    <option value="reading">Currently Reading</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="location-${index}">Location</label>
+                                <input type="text" id="location-${index}" placeholder="e.g., Living room shelf">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="notes-${index}">Personal Notes (optional)</label>
+                            <textarea id="notes-${index}" placeholder="Your thoughts about this book..."></textarea>
+                        </div>
+                        <div class="add-actions">
+                            <button type="button" class="btn btn-secondary btn-small" onclick="hideAddForm(${index})">Cancel</button>
+                            <button type="submit" class="btn btn-success btn-small">Add Book</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        function hideAddForm(index) {
+            const formContainer = document.getElementById(`add-form-${index}`);
+            formContainer.style.display = 'none';
+            formContainer.innerHTML = '';
+        }
+
+        async function addToLibrary(event, index) {
+            event.preventDefault();
+            
+            try {
+                const user = window.auth.currentUser;
+                if (!user) {
+                    showMessage('Please sign in first');
+                    return;
+                }
+
+                const token = await user.getIdToken();
+                const book = searchResultsData[index];
+                
+                const bookData = {
+                    title: book.title,
+                    author: book.author,
+                    isbn: book.isbn,
+                    publicationYear: book.publicationYear,
+                    publisher: book.publisher,
+                    coverUrl: book.coverUrl,
+                    readingStatus: document.getElementById(`status-${index}`).value,
+                    location: document.getElementById(`location-${index}`).value || null,
+                    personalNotes: document.getElementById(`notes-${index}`).value || null
+                };
+
+                const response = await fetch('/api/books', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage(`"${book.title}" added to your library!`, 'success');
+                    hideAddForm(index);
+                    
+                    // Optionally disable the add button
+                    const resultCard = document.getElementById(`result-${index}`);
+                    const addButton = resultCard.querySelector('.btn-success');
+                    addButton.textContent = '✓ Added';
+                    addButton.disabled = true;
+                    addButton.style.opacity = '0.6';
+                    addButton.style.cursor = 'not-allowed';
+                } else {
+                    showMessage('Failed to add book: ' + result.message);
+                }
+            } catch (error) {
+                showMessage('Error adding book: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
