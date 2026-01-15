@@ -92,6 +92,8 @@ public class BookController {
      * @param status Optional filter by reading status
      * @param author Optional filter by author
      * @param location Optional filter by location
+     * @param sortBy Optional sort field (title, author, dateAdded)
+     * @param order Optional sort order (asc, desc)
      * @return List of user's books (filtered if parameters provided)
      */
     @GetMapping
@@ -100,7 +102,9 @@ public class BookController {
             @RequestParam(value = "search", required = false) String searchQuery,
             @RequestParam(value = "status", required = false) String status,
             @RequestParam(value = "author", required = false) String author,
-            @RequestParam(value = "location", required = false) String location) {
+            @RequestParam(value = "location", required = false) String location,
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "order", required = false, defaultValue = "asc") String order) {
         
         Map<String, Object> response = new HashMap<>();
         
@@ -142,6 +146,11 @@ public class BookController {
             // Apply location filter if provided
             if (location != null && !location.trim().isEmpty()) {
                 books = filterBooksByLocation(books, location.trim());
+            }
+            
+            // Apply sorting if provided
+            if (sortBy != null && !sortBy.trim().isEmpty()) {
+                books = sortBooks(books, sortBy.trim(), order);
             }
             
             response.put("success", true);
@@ -250,6 +259,81 @@ public class BookController {
             .filter(book -> book.getLocation() != null && 
                            book.getLocation().toLowerCase().contains(lowerLocation))
             .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Sorts books by the specified field and order.
+     * 
+     * @param books List of books to sort
+     * @param sortBy Field to sort by (title, author, dateAdded)
+     * @param order Sort order (asc or desc)
+     * @return Sorted list of books
+     */
+    private List<Book> sortBooks(List<Book> books, String sortBy, String order) {
+        java.util.Comparator<Book> comparator;
+        
+        switch (sortBy.toLowerCase()) {
+            case "title":
+                comparator = java.util.Comparator.comparing(
+                    book -> book.getTitle() != null ? book.getTitle().toLowerCase() : "",
+                    java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())
+                );
+                break;
+                
+            case "author":
+                comparator = java.util.Comparator.comparing(
+                    book -> extractLastName(book.getAuthor()),
+                    java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())
+                );
+                break;
+                
+            case "dateadded":
+                comparator = java.util.Comparator.comparing(
+                    Book::getDateAdded,
+                    java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())
+                );
+                break;
+                
+            default:
+                // Default to title if invalid sortBy
+                comparator = java.util.Comparator.comparing(
+                    book -> book.getTitle() != null ? book.getTitle().toLowerCase() : "",
+                    java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())
+                );
+        }
+        
+        // Reverse if descending order
+        if ("desc".equalsIgnoreCase(order)) {
+            comparator = comparator.reversed();
+        }
+        
+        return books.stream()
+            .sorted(comparator)
+            .collect(java.util.stream.Collectors.toList());
+    }
+    
+    /**
+     * Extracts the last name from an author string for sorting purposes.
+     * Handles various author name formats.
+     * 
+     * @param author Full author name
+     * @return Last name in lowercase, or empty string if null
+     */
+    private String extractLastName(String author) {
+        if (author == null || author.trim().isEmpty()) {
+            return "";
+        }
+        
+        String trimmed = author.trim();
+        String[] parts = trimmed.split("\\s+");
+        
+        // If multiple parts, assume last part is last name
+        if (parts.length > 1) {
+            return parts[parts.length - 1].toLowerCase();
+        }
+        
+        // Single word name
+        return trimmed.toLowerCase();
     }
 
     /**
