@@ -582,11 +582,14 @@
         }
 
         async function loadBooks() {
+            console.log('loadBooks called');
             try {
                 const user = window.auth.currentUser;
+                console.log('Current user:', user ? user.email : 'null');
                 if (!user) return;
 
                 const token = await user.getIdToken();
+                console.log('Got token:', token.substring(0, 20) + '...');
                 
                 // Get search query if it exists
                 const searchInput = document.getElementById('library-search');
@@ -616,15 +619,20 @@
                     url += '?' + params.toString();
                 }
                 
+                console.log('Fetching URL:', url);
+                
                 const response = await fetch(url, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
                 });
 
+                console.log('Response status:', response.status);
                 const result = await response.json();
+                console.log('Response data:', result);
 
                 if (response.ok) {
+                    console.log('Books to display:', result.books ? result.books.length : 0);
                     displayBooks(result.books || []);
                     document.getElementById('book-count').textContent = result.count || 0;
                     
@@ -641,9 +649,11 @@
                     // Update active filters display
                     updateActiveFilters(statusFilter, authorFilter, locationFilter);
                 } else {
+                    console.error('Failed to load books:', result.message);
                     showMessage('Failed to load books: ' + result.message);
                 }
             } catch (error) {
+                console.error('Error in loadBooks:', error);
                 showMessage('Error loading books: ' + error.message);
             }
         }
@@ -655,7 +665,8 @@
             const panel = document.getElementById('filter-panel');
             const icon = document.getElementById('filter-toggle-icon');
             panel.classList.toggle('active');
-            icon.textContent = panel.classList.contains('active') ? '▲' : '▼'
+            icon.textContent = panel.classList.contains('active') ? '▲' : '▼';
+        }
         
         function applyFilters() {
             loadBooks();
