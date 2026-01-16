@@ -499,25 +499,17 @@
         window.auth = auth;
         window.signOutFirebase = signOut;
 
-        // Wait for DOM to be fully loaded before setting up auth listener
-        document.addEventListener('DOMContentLoaded', () => {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // Check if loadBooks function is available
-                    if (typeof window.loadBooks === 'function') {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Call loadBooks after a short delay to ensure DOM and functions are ready
+                setTimeout(() => {
+                    if (window.loadBooks) {
                         window.loadBooks();
-                    } else {
-                        // If not available yet, wait a bit for scripts to load
-                        setTimeout(() => {
-                            if (typeof window.loadBooks === 'function') {
-                                window.loadBooks();
-                            }
-                        }, 100);
                     }
-                } else {
-                    window.location.href = '/';
-                }
-            });
+                }, 50);
+            } else {
+                window.location.href = '/';
+            }
         });
     </script>
 
