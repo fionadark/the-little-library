@@ -12,7 +12,7 @@
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #D8125B 0%, #A00F48 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -62,7 +62,7 @@
         }
         input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #D8125B;
         }
         .btn {
             width: 100%;
@@ -76,11 +76,11 @@
             transition: all 0.3s;
         }
         .btn-primary {
-            background: #667eea;
+            background: #D8125B;
             color: white;
         }
         .btn-primary:hover {
-            background: #5568d3;
+            background: #B00F4D;
         }
         .btn-google {
             background: white;
@@ -92,11 +92,11 @@
         }
         .btn-secondary {
             background: transparent;
-            color: #667eea;
-            border: 1px solid #667eea;
+            color: #D8125B;
+            border: 1px solid #D8125B;
         }
         .btn-secondary:hover {
-            background: #f0f2ff;
+            background: #ffe6f0;
         }
         .btn-danger {
             background: #e74c3c;
@@ -263,7 +263,8 @@
         // Auth state observer
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                showAuthenticatedSection(user);
+                // Redirect to library page if already authenticated
+                window.location.href = '/library.html';
             } else {
                 showLoginSection();
             }
