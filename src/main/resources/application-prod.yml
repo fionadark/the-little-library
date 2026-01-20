@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: the-little-library
+
+server:
+  port: ${PORT:8080}
+
+firebase:
+  project-id: the-little-library-2316c
+  service-account-key-path: ${FIREBASE_SERVICE_ACCOUNT_KEY_PATH:/app/firebase-service-account.json}
