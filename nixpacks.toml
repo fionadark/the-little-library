@@ -1,5 +1,11 @@
+[phases.setup]
+nixPkgs = ["...", "jdk21"]
+
 [phases.build]
 cmds = ["./gradlew clean bootJar -x test"]
 
 [start]
 cmd = "java -Dserver.port=$PORT -jar build/libs/app.jar"
+
+[variables]
+NIXPACKS_JDK_VERSION = "21"
