@@ -1,5 +1,0 @@
-[phases.build]
-cmds = ["./gradlew clean bootJar -x test"]
-
-[start]
-cmd = "java -Dserver.port=$PORT -jar build/libs/app.jar"
