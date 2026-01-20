@@ -11,4 +11,5 @@ plugins {
 }
 
 rootProject.name = "the-little-library"
-include("app")
+// Removed app module - using root project for Spring Boot app
+// include("app")
