@@ -478,6 +478,9 @@
         </div>
     </div>
 
+    <!-- Config -->
+    <script src="config.js"></script>
+    
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -621,7 +624,7 @@
                 
                 console.log('Fetching URL:', url);
                 
-                const response = await fetch(url, {
+                const response = await fetch(API_BASE_URL + url, {
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }
@@ -786,7 +789,7 @@
 
                 const token = await user.getIdToken();
                 
-                const response = await fetch(`/api/books/${bookId}`, {
+                const response = await fetch(`${API_BASE_URL}/api/books/${bookId}`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': 'Bearer ' + token

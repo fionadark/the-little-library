@@ -234,6 +234,9 @@
         </div>
     </div>
 
+    <!-- Config -->
+    <script src="config.js"></script>
+    
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -397,7 +400,7 @@
 
                 const token = await user.getIdToken();
                 
-                const response = await fetch('/api/auth/verify', {
+                const response = await fetch(API_BASE_URL + '/api/auth/verify', {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
