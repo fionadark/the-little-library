@@ -65,6 +65,11 @@ task integrationTest(type: Test) {
 
 check.dependsOn integrationTest
 
+// Disable plain jar and configure bootJar for Railway deployment
 jar {
     enabled = false
+}
+
+bootJar {
+    archiveFileName = 'app.jar'
 }
