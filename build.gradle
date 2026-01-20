@@ -64,3 +64,8 @@ task integrationTest(type: Test) {
 }
 
 check.dependsOn integrationTest
+
+// Disable plain jar, only create bootJar for Railway deployment
+jar {
+    enabled = false
+}
