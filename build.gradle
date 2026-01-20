@@ -72,5 +72,8 @@ jar {
 
 bootJar {
     archiveFileName = 'app.jar'
-    mainClass = 'thelittlelibrary.LittleLibrary'
+    manifest {
+        attributes 'Main-Class': 'thelittlelibrary.LittleLibrary'
+        attributes 'Start-Class': 'thelittlelibrary.LittleLibrary'
+    }
 }
