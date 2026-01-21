@@ -1,2 +1,2 @@
-// Replace this with actual Railway backend URL after deployment
-const API_BASE_URL = 'https://your-app-name.up.railway.app';
+// Railway backend URL
+const API_BASE_URL = 'https://the-little-library-production.up.railway.app';
