@@ -23,6 +23,9 @@ public class ExternalBookSearchService {
     @Value("${external.api.open-library.base-url:https://openlibrary.org}")
     private String openLibraryBaseUrl;
 
+    @Value("${external.api.open-library.cover-base-url:https://covers.openlibrary.org}")
+    private String openLibraryCoverBaseUrl;
+
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
@@ -75,7 +78,7 @@ public class ExternalBookSearchService {
                 // Add cover URL if available
                 String coverKey = extractCoverKey(doc);
                 if (coverKey != null) {
-                    book.setCoverUrl(String.format("%s/b/id/%s-M.jpg", openLibraryBaseUrl, coverKey));
+                    book.setCoverUrl(String.format("%s/b/id/%s-M.jpg", openLibraryCoverBaseUrl, coverKey));
                 }
 
                 // Add book to the list

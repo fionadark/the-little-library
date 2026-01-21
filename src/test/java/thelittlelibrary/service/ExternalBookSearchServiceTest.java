@@ -35,9 +35,10 @@ class ExternalBookSearchServiceTest {
     void setUp() {
         service = new ExternalBookSearchService();
         
-        // Inject mock RestTemplate and base URL
+        // Inject mock RestTemplate and base URLs
         ReflectionTestUtils.setField(service, "restTemplate", restTemplate);
         ReflectionTestUtils.setField(service, "openLibraryBaseUrl", "https://openlibrary.org");
+        ReflectionTestUtils.setField(service, "openLibraryCoverBaseUrl", "https://covers.openlibrary.org");
 
         // Create sample OpenLibrary API response
         mockOpenLibraryResponse = createMockOpenLibraryResponse();
@@ -82,7 +83,7 @@ class ExternalBookSearchServiceTest {
         assertEquals("9780547928227", book.getIsbn());
         assertEquals(1937, book.getPublicationYear());
         assertEquals("Houghton Mifflin", book.getPublisher());
-        assertEquals("https://openlibrary.org/b/id/12345-M.jpg", book.getCoverUrl());
+        assertEquals("https://covers.openlibrary.org/b/id/12345-M.jpg", book.getCoverUrl());
     }
 
     @Test

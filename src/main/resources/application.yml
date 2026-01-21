@@ -5,6 +5,7 @@ external:
   api:
     open-library:
       base-url: https://openlibrary.org
+      cover-base-url: https://covers.openlibrary.org
       timeout: 5000
 
 firebase:
