@@ -75,10 +75,10 @@ public class ExternalBookSearchService {
                 book.setPublicationYear(extractYear(doc.get("first_publish_year")));
                 book.setPublisher(extractFirstPublisher(doc.get("publisher")));
                 
-                // Add cover URL if available
-                String coverKey = extractCoverKey(doc);
-                if (coverKey != null) {
-                    book.setCoverUrl(String.format("%s/b/id/%s-M.jpg", openLibraryCoverBaseUrl, coverKey));
+                // Add cover URL if available - prefer ISBN over cover ID
+                String coverUrl = buildCoverUrl(book.getIsbn(), doc.get("cover_i"));
+                if (coverUrl != null) {
+                    book.setCoverUrl(coverUrl);
                 }
 
                 // Add book to the list
@@ -145,15 +145,23 @@ public class ExternalBookSearchService {
     }
 
     /**
-     * Extracts the cover image ID from the OpenLibrary document.
-     * @param doc OpenLibrary document containing book metadata
-     * @return Cover ID for building image URL, or null if no cover available
+     * Builds the cover image URL for a book.
+     * Prefers ISBN format over cover ID format as per OpenLibrary API documentation.
+     * @param isbn Book's ISBN number
+     * @param coverIdObj Cover ID from OpenLibrary API response
+     * @return Cover URL, or null if neither ISBN nor cover ID is available
      */
-    private String extractCoverKey(Map<String, Object> doc) {
-        Object coverId = doc.get("cover_i");
-        if (coverId instanceof Number) {
-            return coverId.toString();
+    private String buildCoverUrl(String isbn, Object coverIdObj) {
+        // Prefer ISBN format: https://covers.openlibrary.org/b/isbn/{ISBN}-M.jpg
+        if (isbn != null && !isbn.isEmpty()) {
+            return String.format("%s/b/isbn/%s-M.jpg", openLibraryCoverBaseUrl, isbn);
         }
+        
+        // Fallback to cover ID format: https://covers.openlibrary.org/b/id/{ID}-M.jpg
+        if (coverIdObj instanceof Number) {
+            return String.format("%s/b/id/%s-M.jpg", openLibraryCoverBaseUrl, coverIdObj.toString());
+        }
+        
         return null;
     }
 }

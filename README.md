@@ -1,6 +1,6 @@
 # The Little Library
 
-A personal library management web application for tracking and organizing your book collection. Search for books via OpenLibrary API and maintain your own curated reading list with custom notes and ratings.
+A personal library management web application for tracking and organizing your book collection. Search for books via [OpenLibrary API] (https://openlibrary.org/) and maintain your own curated reading list with custom notes and ratings.
 
 **Live Application:** [https://fionadark.com/littlelibrary/](https://fionadark.com/littlelibrary/)
 

@@ -83,7 +83,7 @@ class ExternalBookSearchServiceTest {
         assertEquals("9780547928227", book.getIsbn());
         assertEquals(1937, book.getPublicationYear());
         assertEquals("Houghton Mifflin", book.getPublisher());
-        assertEquals("https://covers.openlibrary.org/b/id/12345-M.jpg", book.getCoverUrl());
+        assertEquals("https://covers.openlibrary.org/b/isbn/9780547928227-M.jpg", book.getCoverUrl());
     }
 
     @Test
