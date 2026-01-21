@@ -391,7 +391,7 @@
         <div class="section add-books-section">
             <h2>Discover New Books</h2>
             <p style="color: #666; margin-bottom: 20px;">Search the OpenLibrary API to easily add books to your collection.</p>
-            <a href="/search.html" class="btn btn-primary btn-large">
+            <a href="/littlelibrary/search.html" class="btn btn-primary btn-large">
                 🔍 Add Books from OpenLibrary
             </a>
         </div>
@@ -511,7 +511,7 @@
                     }
                 }, 50);
             } else {
-                window.location.href = '/';
+                window.location.href = '/littlelibrary/';
             }
         });
     </script>
@@ -530,7 +530,7 @@
         async function logout() {
             try {
                 await window.signOutFirebase(window.auth);
-                window.location.href = '/';
+                window.location.href = '/littlelibrary/';
             } catch (error) {
                 showMessage('Sign out failed: ' + error.message);
             }
