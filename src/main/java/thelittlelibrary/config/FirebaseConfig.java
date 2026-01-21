@@ -13,8 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Firebase configuration class.
@@ -28,13 +30,16 @@ public class FirebaseConfig {
 
     @Value("${firebase.service-account-key-path:}")
     private String serviceAccountKeyPath;
+    
+    @Value("${firebase.service-account-json:}")
+    private String serviceAccountJson;
 
     @Value("${firebase.project-id}")
     private String projectId;
 
     /**
      * Initialize Firebase App on application startup.
-     * Uses service account credentials for authentication.
+     * Uses service account credentials from file path, JSON string, or application default.
      */
     @PostConstruct
     public void initialize() {
@@ -51,8 +56,20 @@ public class FirebaseConfig {
                         .build();
                 
                 logger.info("Firebase initialized with service account key from: {}", serviceAccountKeyPath);
+            } else if (serviceAccountJson != null && !serviceAccountJson.isEmpty()) {
+                // Initialize with service account JSON string (for Railway/cloud environments)
+                ByteArrayInputStream serviceAccount = new ByteArrayInputStream(
+                    serviceAccountJson.getBytes(StandardCharsets.UTF_8)
+                );
+                
+                options = FirebaseOptions.builder()
+                        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                        .setProjectId(projectId)
+                        .build();
+                
+                logger.info("Firebase initialized with service account JSON from environment variable");
             } else {
-                // Initialize with application default credentials (for production/cloud environments)
+                // Initialize with application default credentials
                 options = FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.getApplicationDefault())
                         .setProjectId(projectId)
