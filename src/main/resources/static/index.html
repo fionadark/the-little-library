@@ -266,7 +266,7 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 // Redirect to library page if already authenticated
-                window.location.href = '/library.html';
+                window.location.href = '/littlelibrary/library.html';
             } else {
                 showLoginSection();
             }
@@ -374,7 +374,7 @@
         }
 
         function goToLibrary() {
-            window.location.href = '/library.html';
+            window.location.href = '/littlelibrary/library.html';
         }
 
         async function showToken() {
