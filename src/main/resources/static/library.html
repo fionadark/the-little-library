@@ -743,6 +743,14 @@
                 return;
             }
 
+            // Generate cover URLs for books that don't have one but have ISBN
+            books = books.map(book => {
+                if (!book.coverUrl && book.isbn) {
+                    book.coverUrl = `https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg`;
+                }
+                return book;
+            });
+
             container.innerHTML = '<div class="books-list">' + books.map(book => `
                 <div class="book-card">
                     <div class="book-cover">
