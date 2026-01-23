@@ -240,6 +240,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { auth, googleProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, signOut, onAuthStateChanged } from './firebase-config.js';
+        import { logoutUser, getAuthToken, getCurrentUser } from './auth-utils.js';
 
         // Make auth available globally
         window.auth = auth;
@@ -347,7 +348,7 @@
 
         async function logout() {
             try {
-                await window.signOut(window.auth);
+                await logoutUser();
                 document.getElementById('token-display').innerHTML = '';
                 document.getElementById('test-result').innerHTML = '';
                 showMessage('Successfully signed out', 'success');
@@ -362,9 +363,9 @@
 
         async function showToken() {
             try {
-                const user = window.auth.currentUser;
+                const user = getCurrentUser();
                 if (user) {
-                    const token = await user.getIdToken();
+                    const token = await getAuthToken();
                     document.getElementById('token-display').innerHTML = 
                         '<div class="token-display"><strong>ID Token (for Authorization header):</strong><br>' + token + '</div>';
                 }
@@ -375,13 +376,13 @@
 
         async function testBackendAuth() {
             try {
-                const user = window.auth.currentUser;
+                const user = getCurrentUser();
                 if (!user) {
                     showMessage('Please sign in first');
                     return;
                 }
 
-                const token = await user.getIdToken();
+                const token = await getAuthToken();
                 
                 const response = await fetch(API_BASE_URL + '/api/auth/verify', {
                     method: 'GET',

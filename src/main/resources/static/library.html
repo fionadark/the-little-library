@@ -484,6 +484,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { auth, signOut, onAuthStateChanged } from './firebase-config.js';
+        import { logoutAndRedirect, getAuthTokenSafe } from './auth-utils.js';
 
         window.auth = auth;
         window.signOutFirebase = signOut;
@@ -514,25 +515,15 @@
         }
 
         async function logout() {
-            try {
-                await window.signOutFirebase(window.auth);
-                window.location.href = '/littlelibrary/';
-            } catch (error) {
-                showMessage('Sign out failed: ' + error.message);
-            }
+            await logoutAndRedirect('/littlelibrary/', showMessage);
         }
 
         async function addBook(event) {
             event.preventDefault();
             
             try {
-                const user = window.auth.currentUser;
-                if (!user) {
-                    showMessage('Please sign in first');
-                    return;
-                }
-
-                const token = await user.getIdToken();
+                const token = await getAuthTokenSafe(showMessage);
+                if (!token) return;
                 
                 const bookData = {
                     title: document.getElementById('title').value,
@@ -573,11 +564,9 @@
         async function loadBooks() {
             console.log('loadBooks called');
             try {
-                const user = window.auth.currentUser;
-                console.log('Current user:', user ? user.email : 'null');
-                if (!user) return;
-
-                const token = await user.getIdToken();
+                const token = await getAuthTokenSafe(showMessage);
+                if (!token) return;
+                
                 console.log('Got token:', token.substring(0, 20) + '...');
                 
                 // Get search query if it exists
@@ -778,10 +767,8 @@
             }
 
             try {
-                const user = window.auth.currentUser;
-                if (!user) return;
-
-                const token = await user.getIdToken();
+                const token = await getAuthTokenSafe(showMessage);
+                if (!token) return;
                 
                 const response = await fetch(`${API_BASE_URL}/api/books/${bookId}`, {
                     method: 'DELETE',

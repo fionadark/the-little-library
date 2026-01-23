@@ -270,6 +270,7 @@
     <!-- Firebase SDK -->
     <script type="module">
         import { auth, signOut, onAuthStateChanged } from './firebase-config.js';
+        import { logoutAndRedirect, getAuthTokenSafe } from './auth-utils.js';
 
         window.auth = auth;
         window.signOutFirebase = signOut;
@@ -295,12 +296,7 @@
         }
 
         async function logout() {
-            try {
-                await window.signOutFirebase(window.auth);
-                window.location.href = '/littlelibrary/';
-            } catch (error) {
-                showMessage('Sign out failed: ' + error.message);
-            }
+            await logoutAndRedirect('/littlelibrary/', showMessage);
         }
 
         async function searchBooks(event) {
@@ -406,13 +402,9 @@
             event.preventDefault();
             
             try {
-                const user = window.auth.currentUser;
-                if (!user) {
-                    showMessage('Please sign in first');
-                    return;
-                }
-
-                const token = await user.getIdToken();
+                const token = await getAuthTokenSafe(showMessage);
+                if (!token) return;
+                
                 const book = searchResultsData[index];
                 
                 const bookData = {
