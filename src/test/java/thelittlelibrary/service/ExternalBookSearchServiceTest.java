@@ -311,7 +311,25 @@ class ExternalBookSearchServiceTest {
 
     @Test
     void searchBooks_withMissingCover_setsCoverUrlToNull() {
-        // Arrange
+        // Arrange - Remove both cover_i and isbn to test null cover URL
+        @SuppressWarnings("unchecked")
+        Map<String, Object> book = ((List<Map<String, Object>>) mockOpenLibraryResponse.get("docs")).get(0);
+        book.remove("cover_i");
+        book.remove("isbn");  // Also remove ISBN since we now generate cover URLs from ISBN
+        
+        when(restTemplate.getForObject(anyString(), eq(Map.class)))
+            .thenReturn(mockOpenLibraryResponse);
+
+        // Act
+        List<BookSearchResponse> results = service.searchBooks("test", 1);
+
+        // Assert
+        assertNull(results.get(0).getCoverUrl());
+    }
+
+    @Test
+    void searchBooks_withIsbnButNoCoverId_generatesCoverUrlFromIsbn() {
+        // Arrange - Remove cover_i but keep ISBN
         @SuppressWarnings("unchecked")
         Map<String, Object> book = ((List<Map<String, Object>>) mockOpenLibraryResponse.get("docs")).get(0);
         book.remove("cover_i");
@@ -323,7 +341,8 @@ class ExternalBookSearchServiceTest {
         List<BookSearchResponse> results = service.searchBooks("test", 1);
 
         // Assert
-        assertNull(results.get(0).getCoverUrl());
+        assertNotNull(results.get(0).getCoverUrl());
+        assertEquals("https://covers.openlibrary.org/b/isbn/9780547928227-M.jpg", results.get(0).getCoverUrl());
     }
 
     @Test
